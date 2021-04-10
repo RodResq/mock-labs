@@ -22,13 +22,17 @@ public class GeradorDePagamentosTest {
     PagamentoDao pagamentoDao;
 
     @BeforeEach
-    void beforeEach() {
+    public void beforeEach() {
         MockitoAnnotations.initMocks(this);
         this.geradorDePagamento = new GeradorDePagamento(pagamentoDao);
     }
 
-    private List<Leilao> leiloes() {
-        List<Leilao> lista = new ArrayList<>();
+    void deveriaCriarPagamentoParaVencedorDoLeilao() {
+
+    }
+
+
+    private Leilao leiloe() {
 
         Leilao leilao = new Leilao("Celular",
                 new BigDecimal("500"),
@@ -36,15 +40,10 @@ public class GeradorDePagamentosTest {
 
         Lance primeiro = new Lance(new Usuario("Beltrano"),
                 new BigDecimal("600"));
-        Lance segundo = new Lance(new Usuario("Ciclano"),
-                new BigDecimal("900"));
 
         leilao.propoe(primeiro);
-        leilao.propoe(segundo);
 
-        lista.add(leilao);
-
-        return lista;
+        return leilao;
     }
 
 
