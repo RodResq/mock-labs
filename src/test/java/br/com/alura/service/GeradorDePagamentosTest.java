@@ -7,10 +7,13 @@ import br.com.alura.leilao.model.Pagamento;
 import br.com.alura.leilao.model.Usuario;
 import br.com.alura.leilao.service.FinalizarLeilaoService;
 import br.com.alura.leilao.service.GeradorDePagamento;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,11 +34,18 @@ public class GeradorDePagamentosTest {
         this.geradorDePagamento = new GeradorDePagamento(pagamentoDao);
     }
 
+    @Test
     void deveriaCriarPagamentoParaVencedorDoLeilao() {
         Leilao leilao = leilao();
         Lance lanceVencedor = leilao.getLanceVencedor();
         geradorDePagamento.gerarPagamento(lanceVencedor);
         Mockito.verify(pagamentoDao).salvar(pagamentoCaptor.capture());
+        Pagamento pagamentoCaptorValue = pagamentoCaptor.getValue();
+        Assert.assertEquals(LocalDate.now().plusDays(1), pagamentoCaptorValue.getVencimento());
+        Assert.assertEquals(lanceVencedor.getValor(), pagamentoCaptorValue.getValor());
+        Assert.assertEquals(lanceVencedor.getUsuario(), pagamentoCaptorValue.getUsuario());
+        Assert.assertEquals(lanceVencedor.getLeilao(), leilao);
+        Assert.assertFalse(pagamentoCaptorValue.getPago());
     }
 
 
